@@ -8,8 +8,6 @@ from flask import (
     url_for,
 )
 
-from app import db
-from app.products.models import Product
 from app.products.controller import (
     product_list,
     product_delete,
