@@ -21,6 +21,9 @@ ___________________________
 
     `$ docker-compose -f local.yml up`
 
+-   If you need something from `flask cli` in docker just run something like this:
+
+    `$ docker-compose -f local.yml run web flask db init`
 ____________________________
 
 ## TODO 
