@@ -11,4 +11,5 @@ Flask-Migrate==4.0.0 # https://github.com/miguelgrinberg/Flask-Migrate
 Flask-SQLAlchemy==3.0.2 # https://github.com/pallets-eco/flask-sqlalchemy
 Flask-CeleryExt==0.4.3 # https://github.com/inveniosoftware/flask-celeryext
 Flask-BasicAuth==0.2.0 # https://github.com/jpvanhal/flask-basicauth
+Flask-JSONRPC==2.2.2 # https://github.com/cenobites/flask-jsonrpc
 
