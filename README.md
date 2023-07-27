@@ -8,10 +8,20 @@ _________________________
 -   SQLAlchemy
 -   Celery
 -   Redis
--   Mysql/MariaDB
+-   Mysql/MariaDB ?
 -   Docker
 
 ___________________________
+
+### HOW TO RUN IT
+
+-   Easy as it can be:
+
+    `$ docker-compose -f local.yml build --no-cache`
+
+    `$ docker-compose -f local.yml up`
+
+____________________________
 
 ## TODO 
 
@@ -36,11 +46,3 @@ ___________________________
 -   [ ]  Дампик бд
 
 __________________________________
-
-### HOW TO RUN IT
-
--   Easy as it can be:
-
-    `$ docker-compose -f local.yml build --no-cache`
-
-    `$ docker-compose -f local.yml up`
