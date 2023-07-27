@@ -1,9 +1,12 @@
 import os
 
 from flask import Flask
+from flask_jsonrpc import JSONRPC
 from flask_migrate import Migrate
+from flask_basicauth import BasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_celeryext import FlaskCeleryExt
+
 
 from app.celery_utils import make_celery
 from app.config import config
@@ -11,6 +14,8 @@ from app.config import config
 db = SQLAlchemy()
 migrate = Migrate()
 ext_celery = FlaskCeleryExt(create_celery_app=make_celery)
+base_auth = BasicAuth()
+jsonrpc = JSONRPC()
 
 
 def create_app(config_name=None):
