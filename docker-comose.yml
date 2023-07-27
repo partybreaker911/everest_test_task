@@ -15,7 +15,7 @@ services:
     ports:
       - 5010:5000
     env_file:
-      - .env/.dev-sample
+      - .env/.dev
     environment:
       - FLASK_APP=app
     depends_on:
@@ -43,7 +43,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env/.dev-sample
+      - .env/.dev
     environment:
       - FLASK_APP=app
     depends_on:
@@ -59,7 +59,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env/.dev-sample
+      - .env/.dev
     environment:
       - FLASK_APP=app
     depends_on:
@@ -75,7 +75,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env/.dev-sample
+      - .env/.dev
     environment:
       - FLASK_APP=app
     ports:
