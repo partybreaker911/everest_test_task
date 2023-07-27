@@ -6,7 +6,7 @@ from flask import (
     url_for,
 )
 
-from app.orders import orders_blueprint
+from orders import orders_blueprint
 from app.orders.controller import (
     order_create,
     order_update,

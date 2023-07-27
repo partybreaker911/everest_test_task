@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_celeryext import FlaskCeleryExt
 
 
+from app.orders import orders_blueprint
 from app.celery_utils import make_celery
 from app.config import config
 
@@ -29,15 +30,25 @@ def create_app(config_name=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.users import users_blueprint
-    from app.products import products_blueprint
-    from app.orders import orders_blueprint
+    # from .users import users_blueprint
+    from app.products.views import products_blueprint
 
-    app.register_blueprint(users_blueprint)
+    # app.register_blueprint(users_blueprint)
     app.register_blueprint(products_blueprint)
     app.register_blueprint(orders_blueprint)
 
-    # Shell context for flask cli
+    @app.route("/all_routes", methods=["GET"])
+    def all_routes():
+        routes = []
+        for rule in app.url_map.iter_rules():
+            route = {
+                "endpoint": rule.endpoint,
+                "methods": ",".join(rule.methods),
+                "path": str(rule),
+            }
+            routes.append(route)
+        return {"routes": routes}
+
     @app.shell_context_processor
     def ctx():
         return {

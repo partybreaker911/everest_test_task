@@ -1,5 +1,6 @@
 from typing import Union
 
+from flask import Blueprint
 from flask import (
     Response,
     render_template,
@@ -15,7 +16,11 @@ from app.products.controller import (
     product_create,
     product_update,
 )
-from app.products import products_blueprint
+
+# from app.products import products_blueprint
+
+
+products_blueprint = Blueprint("products", __name__, template_folder="templates")
 
 
 @products_blueprint.route("/", methods=["GET"])
@@ -28,9 +33,8 @@ def list_of_products() -> str:
     """
     products = product_list()
 
-    return render_template(
-        "templates/products/list_of_products.html", products=products
-    )
+    return render_template("products/list_of_products.html", products=products)
+    # return "Hello World"
 
 
 @products_blueprint.route("/<int:product_id>", methods=["GET"])
@@ -45,7 +49,7 @@ def show_product(product_id: int) -> str:
     """
     product = product_view(product_id)
 
-    return render_template("templates/products/show_product.html", product=product)
+    return render_template("products/show_product.html", product=product)
 
 
 @products_blueprint.route("/products/new", methods=["GET", "POST"])
@@ -67,11 +71,9 @@ def create_product() -> None:
         description = request.form["description"]
 
         new_product = product_create(name, price, color, weight, description)
-        return redirect(url_for("list_products"))
+        return redirect(url_for("products.list_of_products"))
 
-    return render_template(
-        "templates/products/product_form.html", title="Create Product"
-    )
+    return render_template("products/product_form.html", title="Create Product")
 
 
 @products_blueprint.route("/products/<int:id>/edit", methods=["GET", "POST"])
@@ -99,7 +101,7 @@ def edit_product(id: int) -> Union[Response, str]:
         return redirect(url_for("view_product", id=id))
 
     return render_template(
-        "templates/products/product_form.html", title="Edit Product", product=product
+        "products/product_form.html", title="Edit Product", product=product
     )
 
 
@@ -115,4 +117,4 @@ def delete_product(id: int) -> redirect:
     """
     product_delete(id)
 
-    return redirect(url_for("list_products"))
+    return redirect(url_for("products.list_of_products"))
