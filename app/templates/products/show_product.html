@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Product View</h3>
+                <p class="text-subtitle text-muted">Product View</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('products.list_of_products') }}">Product List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">View Product</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="text-center">View Product {{ product.name }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">Price: ${{ product.price }}</p>
+                <p class="card-text">Color: {{ product.color }}</p>
+                <p class="card-text">Weight: {{ product.weight }} kg</p>
+                <p class="card-text">Description: {{ product.description }}</p>
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{{ url_for('products.edit_product', id=product.id) }}" class="btn btn-primary">Edit</a>
+                    <form action="{{ url_for('products.delete_product', id=product.id) }}" method="post" style="display: inline;">
+                        <input class="btn btn-warning" type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    

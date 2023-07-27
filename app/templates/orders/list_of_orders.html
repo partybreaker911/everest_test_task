@@ -2,6 +2,73 @@
 
 
 {% block content %}
-    
+<div class="page-heading">
+    <h3>Orders list</h3>
+</div>
+<div class="page-content">
+    <section class="row">
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Orders</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="search-form" method="GET" action="">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="search" placeholder="Search product">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" id="employee-table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <a class="sort-link" href="#" data-sort-by="full_name">Order ID</a>
+                                            </th>
+                                            <th>
+                                                <a class="sort-link" href="#" data-sort-by="position">Order product</a>
+                                            </th>
+                                            <th>
+                                                <a class="sort-link" href="#" data-sort-by="hire_date">Order quantity</a>
+                                            </th>
+                                            <th>
+                                                <a class="sort-link" href="#" data-sort-by="email">Order status</a>
+                                            </th>
+                                            <th>
+                                                <a class="sort-link" href="#" data-sort-by="manager">Order Time</a>
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for item in orders %}
+                                            <tr>
+                                                <td>{{ item.id }}</td>
+                                                <td></td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>{{ item.status }}</td>
+                                                <td>{{ item.created_at }}</td>
+                                                <td><a href="{{ url_for('orders.order_update', id=item.id) }}" class="btn btn-primary">Edit</a></td>
+                                                <form action="" method="post" style="display: inline;">
+                                                    <input class="btn btn-warning" type="submit" value="Delete">
+                                                </form>
+                                            </tr>
+                                        {% endfor %}
+                                                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                       
 {% endblock content %}
     
