@@ -4,3 +4,4 @@ Flask-SQLAlchemy==3.0.2
 Flask-CeleryExt==0.4.3
 celery==5.2.7
 redis==4.4.0
+psycopg2-binary==2.9.5
