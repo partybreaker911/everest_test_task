@@ -1,4 +1,5 @@
 from app import db
+from app.orders.utils.enum import DeliveryStatus
 
 
 class Order(db.Model):
@@ -11,6 +12,7 @@ class Order(db.Model):
     # product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
     # delivery_address_id = db.Column(db.Integer, db.ForeignKey("address.id"))
     quantity = db.Column(db.Integer, nullable=False)
+    delivery_status = db.Column(db.Enum(DeliveryStatus), default=DeliveryStatus.PENDING)
 
     # user = db.relationship("User", back_populates="orders")
     # delivery_address = db.relationship("Address")
