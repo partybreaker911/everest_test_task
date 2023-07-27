@@ -1,69 +1,96 @@
+from typing import List, Any
+
 from app import db
 from app.products.models import Product
 
 
-def create_product(
+def product_list() -> List[str]:
+    """
+    Retrieves a list of all products from the database.
+
+    Returns:
+        List[str]: A list of all products in the database.
+    """
+    products = Product.query.all()
+    return products
+
+
+def product_view(id: int) -> Any:
+    """
+    Get a product by its ID.
+
+    Args:
+        id (int): The ID of the product.
+
+    Returns:
+        Any: The product object.
+    """
+    product = Product.query.get_or_404(id)
+    return product
+
+
+def product_create(
     name: str, price: float, color: str, weight: float, description: str
-) -> None:
+) -> Any:
     """
-    Create a product and save it to the database.
+    Create a new product in the database.
 
     Args:
-        name: The name of the product.
-        price: The price of the product.
-        color: The color of the product.
-        weight: The weight of the product.
-        description: The description of the product.
+        name: The name of the product (str)
+        price: The price of the product (float)
+        color: The color of the product (str)
+        weight: The weight of the product (float)
+        description: The description of the product (str)
 
     Returns:
-        None
+        The newly created product (Any)
     """
-    product = Product(name, price, color, weight, description)
-    db.session.add(product)
+    new_product = Product(
+        name=name, price=price, color=color, weight=weight, description=description
+    )
+    db.session.add(new_product)
     db.session.commit()
+    return new_product
 
 
-def update_product(
-    product_id: int,
-    name: str,
-    price: float,
-    color: str,
-    weight: float,
-    description: str,
-) -> None:
+def product_update(
+    id: int, name: str, price: float, color: str, weight: float, description: str
+) -> Any:
     """
-    Updates the details of a product in the database.
+    Update product information in the database.
 
     Args:
-        product_id: The ID of the product to be updated.
-        name: The new name of the product.
-        price: The new price of the product.
-        color: The new color of the product.
-        weight: The new weight of the product.
-        description: The new description of the product.
+        id (int): The ID of the product to be updated.
+        name (str): The new name of the product.
+        price (float): The new price of the product.
+        color (str): The new color of the product.
+        weight (float): The new weight of the product.
+        description (str): The new description of the product.
 
     Returns:
-        None
+        Any: The updated product object.
     """
-    product = Product.query.get(product_id)
+    product = Product.query.get_or_404(id)
     product.name = name
     product.price = price
     product.color = color
     product.weight = weight
     product.description = description
     db.session.commit()
+    return product
 
 
-def delete_product(product_id: int) -> None:
+def product_delete(id: int) -> bool:
     """
     Deletes a product from the database.
 
     Args:
-        product_id (int): The ID of the product to be deleted.
+        id: The ID of the product to be deleted.
 
     Returns:
-        None
+        True if the product is successfully deleted, False otherwise.
     """
-    product = Product.query.get(product_id)
+    product = Product.query.get_or_404(id)
     db.session.delete(product)
     db.session.commit()
+    return True
