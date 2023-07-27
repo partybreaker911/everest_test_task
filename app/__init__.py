@@ -7,8 +7,6 @@ from flask_basicauth import BasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_celeryext import FlaskCeleryExt
 
-
-from app.orders import orders_blueprint
 from app.celery_utils import make_celery
 from app.config import config
 
@@ -32,6 +30,7 @@ def create_app(config_name=None):
 
     # from .users import users_blueprint
     from app.products.views import products_blueprint
+    from app.orders.views import orders_blueprint
 
     # app.register_blueprint(users_blueprint)
     app.register_blueprint(products_blueprint)

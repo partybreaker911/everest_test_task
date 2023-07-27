@@ -12,6 +12,7 @@ class Product(db.Model):
     color = db.Column(db.String(80))
     weight = db.Column(db.Float)
     description = db.Column(db.String(80))
+    orders = db.relationship("Order", back_populates="product")
 
     def __init__(self, name, price, color, weight, description):
         self.name = name

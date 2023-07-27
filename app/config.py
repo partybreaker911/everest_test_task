@@ -17,6 +17,7 @@ class BaseConfig:
     CELERY_RESULT_BACKEND = os.environ.get(
         "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
     )
+    SECRET_KEY = os.environ.get("SECRET_KEY", "secret")
 
 
 class DevelopmentConfig(BaseConfig):

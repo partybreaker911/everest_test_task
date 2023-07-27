@@ -2,6 +2,7 @@ from typing import List, Any, Optional
 
 from app import db
 from app.orders.models import Order
+from app.products.models import Product
 
 
 def order_list() -> List[str]:
@@ -32,23 +33,24 @@ def order_view(id: int) -> Any:
     return order
 
 
-def order_create(quantity: float) -> Optional[Order]:
+def order_create(quantity: int, product_id: int) -> Optional[Order]:
     """
-    Create a new order with the given quantity.
+    Create a new order in the database.
 
     Args:
-        quantity (float): The quantity for the new order.
+        quantity (int): The quantity of the product in the order.
+        product_id (int): The ID of the product associated with the order.
 
     Returns:
-        Optional[Order]: The newly created order, or None if there was an error.
+        Order: The newly created order object.
+    Raises:
+        ValueError: If the product with the given ID does not exist.
     """
-    try:
-        new_order = Order(quantity=quantity)
-        db.session.add(new_order)
-        db.session.commit()
-        return new_order
-    except Exception:
-        return None
+    order = Order(quantity=quantity, product_id=product_id)
+    db.session.add(order)
+    db.session.commit()
+
+    return order
 
 
 def order_update(id: int, quantity: float) -> Optional[Order]:

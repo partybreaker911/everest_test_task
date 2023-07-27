@@ -48,7 +48,7 @@
                                         
                                         {% for product in products %}
                                             <tr>
-                                                <td>{{ product.name }}</td>
+                                                <td><a href="{{ url_for('products.show_product', id=product.id) }}">{{ product.name }}</a></td>
                                                 <td>{{ product.price }}</td>
                                                 <td>{{ product.color }}</td>
                                                 <td>{{ product.weigth }}</td>

@@ -16,6 +16,7 @@ from app.products.controller import (
     product_create,
     product_update,
 )
+from app.products.forms import ProductForm
 
 # from app.products import products_blueprint
 
@@ -37,8 +38,8 @@ def list_of_products() -> str:
     # return "Hello World"
 
 
-@products_blueprint.route("/<int:product_id>", methods=["GET"])
-def show_product(product_id: int) -> str:
+@products_blueprint.route("/<int:id>", methods=["GET"])
+def show_product(id: int) -> str:
     """Render the template for displaying a product.
 
     Args:
@@ -47,61 +48,50 @@ def show_product(product_id: int) -> str:
     Returns:
         str: The rendered HTML template.
     """
-    product = product_view(product_id)
+    product = product_view(id)
 
     return render_template("products/show_product.html", product=product)
 
 
 @products_blueprint.route("/products/new", methods=["GET", "POST"])
 def create_product() -> None:
-    """
-    Create a new product.
+    form = ProductForm()
 
-    Args:
-        None.
+    if form.validate_on_submit():
+        # Extract form data
+        name = form.name.data
+        price = form.price.data
+        color = form.color.data
+        weight = form.weight.data
+        description = form.description.data
 
-    Returns:
-        None.
-    """
-    if request.method == "POST":
-        name = request.form["name"]
-        price = float(request.form["price"])
-        color = request.form["color"]
-        weight = float(request.form["weight"])
-        description = request.form["description"]
+        # Call the controller function to create the product
+        product_create(name, price, color, weight, description)
 
-        new_product = product_create(name, price, color, weight, description)
+        # Redirect to the list of products or any other appropriate page
         return redirect(url_for("products.list_of_products"))
 
-    return render_template("products/product_form.html", title="Create Product")
+    return render_template("products/create_product.html", form=form)
 
 
 @products_blueprint.route("/products/<int:id>/edit", methods=["GET", "POST"])
 def edit_product(id: int) -> Union[Response, str]:
-    """
-    Edit a product.
-
-    Args:
-        id (int): The ID of the product to be edited.
-
-    Returns:
-        Union[Response, str]: A redirect response to view the edited product or a rendered template for the product form.
-    """
-
     product = product_view(id)
+    form = ProductForm(obj=product)
 
-    if request.method == "POST":
-        name = request.form["name"]
-        price = float(request.form["price"])
-        color = request.form["color"]
-        weight = float(request.form["weight"])
-        description = request.form["description"]
+    if form.validate_on_submit():
+        # Extract form data
+        name = form.name.data
+        price = form.price.data
+        color = form.color.data
+        weight = form.weight.data
+        description = form.description.data
 
-        product = product_update(id, name, price, color, weight, description)
+        product_update(id, name, price, color, weight, description)
         return redirect(url_for("view_product", id=id))
 
     return render_template(
-        "products/product_form.html", title="Edit Product", product=product
+        "products/product_form.html", title="Edit Product", form=form
     )
 
 
