@@ -25,8 +25,12 @@ def create_app(config_name=None):
     migrate.init_app(app, db)
 
     from app.users import users_blueprint
+    from app.products import products_blueprint
+    from app.orders import orders_blueprint
 
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(products_blueprint)
+    app.register_blueprint(orders_blueprint)
 
     # Shell context for flask cli
     @app.shell_context_processor
