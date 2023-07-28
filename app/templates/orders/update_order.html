@@ -1,0 +1,44 @@
+{% extends 'layouts/master.html' %}
+
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>CRUD order</h3>
+                <p class="text-subtitle text-muted">Update order</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('orders.orders_list') }}">Order List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Update order</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="text-center">Create order</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('orders.order_update', order_id=order.id) }}">
+                <!-- CSRF token -->
+                {{ form.csrf_token }}
+    
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    {{ form.quantity(class="form-control") }}
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Update Order</button>
+            </form>    
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    

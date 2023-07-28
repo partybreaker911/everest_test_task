@@ -15,7 +15,7 @@ def order_list() -> List[str]:
     return orders
 
 
-def order_view(id: int) -> Any:
+def get_order_by_id(order_id: int) -> Any:
     """
     Retrieve an order by its ID.
 
@@ -28,7 +28,7 @@ def order_view(id: int) -> Any:
     Raises:
         404: If the order with the given ID does not exist.
     """
-    order = Order.query.get_or_404(id)
+    order = Order.query.get_or_404(order_id)
     return order
 
 
@@ -39,20 +39,26 @@ def create_order(quantity: int, product_id: int, status: str):
     )
 
 
-def order_update(id: int, quantity: float) -> Optional[Order]:
+def order_update(
+    order_id: int, quantity: int, product_id: int, status: str
+) -> Optional[Order]:
     """
-    Update the quantity of an existing order.
+    Update the quantity, product_id, and status of an existing order.
 
     Args:
-        id (int): The ID of the order.
-        quantity (float): The new quantity for the order.
+        order_id (int): The ID of the order.
+        quantity (int): The new quantity for the order.
+        product_id (int): The new product_id for the order.
+        status (str): The new status for the order.
 
     Returns:
         Optional[Order]: The updated order, or None if there was an error.
     """
     try:
-        order = Order.query.get_or_404(id)
+        order = get_order_by_id(order_id)
         order.quantity = quantity
+        order.product_id = product_id
+        order.status = status
         db.session.commit()
         return order
     except Exception:

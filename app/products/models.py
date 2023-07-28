@@ -15,7 +15,7 @@ class Product(db.Model):
     weight = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
 
-    orders = db.relationship("Order", backref="products")
+    # orders = db.relationship("Order", backref="products")
 
     def __repr__(self):
         return "<Product %r>" % self.name

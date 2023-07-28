@@ -23,3 +23,7 @@ class OrderForm(FlaskForm):
             return False
 
         return True
+
+
+class OrderUpdateForm(FlaskForm):
+    quantity = IntegerField("Quantity", validators=[DataRequired()])

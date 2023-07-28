@@ -36,10 +36,20 @@ class Order(db.Model):
 
 
 class OrderAddress(db.Model):
-    """
-    Order address model
-    """
+    """Model that stores order address information."""
 
-    __table_name__ = "order_addresses"
+    id = db.Column(db.Integer, primary_key=True)
+    country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
+    country = db.relationship(
+        "Country", backref=db.backref("order_addresses", lazy=True)
+    )
+    city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
+    city = db.relationship("City", backref=db.backref("order_addresses", lazy=True))
+    street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
+    street = db.relationship("Street", backref=db.backref("order_addresses", lazy=True))
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    def __init__(self, country, region, city, street):
+        self.country = country
+        self.region = region
+        self.city = city
+        self.street = street
