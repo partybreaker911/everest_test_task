@@ -8,7 +8,7 @@ from flask import (
 )
 
 from app.orders.controller import (
-    order_create,
+    create_order,
     order_update,
     order_list,
     order_view,
@@ -17,6 +17,7 @@ from app.orders.controller import (
 from app.orders.forms import OrderForm
 from app.orders import orders_blueprint
 from app.products.controller import product_list
+from app.products.models import Product
 
 
 @orders_blueprint.route("/", methods=["GET"])
@@ -49,20 +50,20 @@ def order_view(order_id: int) -> str:
 @orders_blueprint.route("/create", methods=["GET", "POST"])
 def order_create() -> None:
     form = OrderForm()
-    form.product_id.choices = [(product.id, product.name) for product in product_list()]
 
     if form.validate_on_submit():
+        # Extract form data
         quantity = form.quantity.data
         product_id = form.product_id.data
+        status = form.status.data
 
-        try:
-            order = order_create(quantity=quantity, product_id=product_id)
-        except ValueError as e:
-            return str(e), 404
+        # Call the controller function to create the order
+        create_order(quantity, product_id, status)
 
-        return redirect(url_for("products.list_products"))
+        # Redirect to the product list page or any other appropriate page
+        return redirect(url_for("products.list_of_products"))
 
-    return render_template("orders/create_order.html", form=form)
+    return render_template("orders/order_create.html", form=form)
 
 
 @orders_blueprint.route("/<int:order_id>/update", methods=["GET", "POST"])

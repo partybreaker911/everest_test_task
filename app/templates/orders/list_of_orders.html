@@ -49,11 +49,11 @@
                                         {% for item in orders %}
                                             <tr>
                                                 <td>{{ item.id }}</td>
-                                                <td></td>
+                                                <td>{{ item.product.name }}</td>
                                                 <td>{{ item.quantity }}</td>
                                                 <td>{{ item.status }}</td>
                                                 <td>{{ item.created_at }}</td>
-                                                <td><a href="{{ url_for('orders.order_update', id=item.id) }}" class="btn btn-primary">Edit</a></td>
+                                                <td><a href="{{ url_for('orders.order_update', order_id=item.id) }}" class="btn btn-primary">Edit</a></td>
                                                 <form action="" method="post" style="display: inline;">
                                                     <input class="btn btn-warning" type="submit" value="Delete">
                                                 </form>
