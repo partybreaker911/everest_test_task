@@ -1,6 +1,7 @@
-# from . import models  # noqa
+from flask import Blueprint
 
-try:
-    from . import tasks  # noqa
-except ImportError:
-    pass
+orders_blueprint = Blueprint(
+    "orders", __name__, url_prefix="/orders", template_folder="templates"
+)
+
+from . import models
