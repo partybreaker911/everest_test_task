@@ -1,3 +1,5 @@
+from typing import Union
+
 from flask import Blueprint
 from flask import (
     Response,
@@ -11,13 +13,13 @@ from app.orders.controller import (
     create_order,
     order_update,
     order_list,
-    order_view,
+    get_order_by_id,
     order_delete,
 )
-from app.orders.forms import OrderForm
+from app.orders.forms import OrderForm, OrderUpdateForm
+from app.products.models import Product
 from app.orders import orders_blueprint
 from app.products.controller import product_list
-from app.products.models import Product
 
 
 @orders_blueprint.route("/", methods=["GET"])
@@ -43,7 +45,7 @@ def order_view(order_id: int) -> str:
     Returns:
         str: The rendered HTML template of the order.
     """
-    order = order_view(order_id)
+    order = get_order_by_id(order_id)
     return render_template("orders/show_order.html", order=order)
 
 
@@ -67,17 +69,25 @@ def order_create() -> None:
 
 
 @orders_blueprint.route("/<int:order_id>/update", methods=["GET", "POST"])
-def order_update(order_id: int) -> None:
-    """
-    View function for updating an existing order.
+def order_update(order_id: int) -> Union[str, Response]:
+    order = get_order_by_id(order_id)
+    # print(order.id)
+    form = OrderForm(obj=order)
 
-    Args:
-        order_id (int): The ID of the order.
+    if form.validate_on_submit():
+        # Get the submitted form data
+        quantity = form.quantity.data
+        product_id = form.product_id.data
+        status = form.status.data
 
-    Returns:
-        None.
-    """
-    return order_update(order_id)
+        if order_update(
+            order_id=order_id, quantity=quantity, product_id=product_id, status=status
+        ):
+            return redirect(url_for("orders.list_orders"))
+        else:
+            return "Error updating order", 500
+
+    return render_template("orders/update_order.html", form=form, order=order)
 
 
 @orders_blueprint.route("/<int:order_id>/delete", methods=["POST"])
