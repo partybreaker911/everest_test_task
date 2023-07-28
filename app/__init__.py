@@ -7,8 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_wtf.csrf import CSRFProtect
 
-from project.celery_utils import make_celery
-from project.config import config
+from app.celery_utils import make_celery
+from app.config import config
 
 
 # instantiate the extensions
