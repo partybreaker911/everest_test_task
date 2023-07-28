@@ -14,5 +14,5 @@ Flask-CeleryExt==0.4.3
 psycopg2-binary==2.9.5
 Flask-WTF==1.0.1
 flask-socketio==5.3.2
-
+Flask-Admin==1.6.0
 
