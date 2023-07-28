@@ -2,14 +2,53 @@
 
 
 {% block content %}
-<h1>Create a New Order</h1>
-<form method="post" action="{{ url_for('orders.order_create') }}">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
-    {{ form.quantity.label }} {{ form.quantity }}
-    {{ form.status.label }} {{ form.status }}
-    {{ form.product_id.label }} {{ form.product_id }}
-    <button type="submit">Submit</button>
-</form>
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>New order</h3>
+                <p class="text-subtitle text-muted">Create new order</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('products.list_of_products') }}">Product List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Creation new order</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="text-center">Create order</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('orders.order_create') }}" class="mt-4">
+                {{ form.csrf_token }}
+                {{ form.hidden_tag() }}
+            
+                <div class="mb-3">
+                    {{ form.quantity.label(class="form-label") }}
+                    {{ form.quantity(class="form-control", placeholder="Enter quantity") }}
+                </div>
+            
+                <div class="mb-3">
+                    {{ form.status.label(class="form-label") }}
+                    {{ form.status(class="form-select") }}
+                </div>
+            
+                <div class="mb-3">
+                    {{ form.product_id.label(class="form-label") }}
+                    {{ form.product_id(class="form-select") }}
+                </div>
+            
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}
     
