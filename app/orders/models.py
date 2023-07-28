@@ -1,17 +1,31 @@
-from datetime import datetime
+from enum import Enum
 
 from app import db
-from app.orders.utils.enum import DeliveryStatus
+
+
+class DeliveryStatus(Enum):
+    PENDING = "Pending"
+    DELIVERED = "Delivered"
+    CANCELLED = "Cancelled"
 
 
 class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    order_number = db.Column(db.String(100))
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
-    quantity = db.Column(db.Integer)
+    """
+    Order model
+    """
 
-    def __init__(self, quantity, product_id):
-        # self.user_id = user_id
-        self.product_id = product_id
-        self.quantity = quantity
-        # self.delivery_address_id = delivery_address_id
+    __tablename__ = "orders"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    quantity = db.Column(db.Integer)
+    delivery_status = db.Column(db.Enum(DeliveryStatus), default=DeliveryStatus.PENDING)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"))
+
+
+class OrderAddress(db.Model):
+    """
+    Order address model
+    """
+
+    __table_name__ = "order_addresses"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
