@@ -35,18 +35,3 @@ class Street(db.Model):
     def __init__(self, name, city):
         self.name = name
         self.city = city
-
-
-class Address(db.Model):
-    """Model that stores address information."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
-    street = db.relationship("Street", backref=db.backref("addresses", lazy=True))
-    postal_code = db.Column(db.String(20), nullable=True)
-    flat = db.Column(db.String(20), nullable=True)
-    # Add any other fields you need for the address
-
-    def __init__(self, street, postal_code=None):
-        self.street = street
-        self.postal_code = postal_code
