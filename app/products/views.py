@@ -9,6 +9,7 @@ from flask import (
     url_for,
 )
 
+from . import products_blueprint
 from app.products.controller import (
     product_list,
     product_delete,
@@ -17,11 +18,6 @@ from app.products.controller import (
     product_update,
 )
 from app.products.forms import ProductForm
-
-# from app.products import products_blueprint
-
-
-products_blueprint = Blueprint("products", __name__, template_folder="templates")
 
 
 @products_blueprint.route("/", methods=["GET"])
@@ -35,7 +31,6 @@ def list_of_products() -> str:
     products = product_list()
 
     return render_template("products/list_of_products.html", products=products)
-    # return "Hello World"
 
 
 @products_blueprint.route("/<int:id>", methods=["GET"])

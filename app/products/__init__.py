@@ -1,10 +1,5 @@
-# from flask import Blueprint
+from flask import Blueprint
 
-# products_blueprint = Blueprint("products", __name__, template_folder="templates")
+products_blueprint = Blueprint("products", __name__, template_folder="templates")
 
-# # from . import models  # noqa
-
-# try:
-#     from . import tasks  # noqa
-# except ImportError:
-#     pass
+from . import models, views  # noqa
