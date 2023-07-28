@@ -39,6 +39,8 @@ class OrderAddress(db.Model):
     """Model that stores order address information."""
 
     id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
+    order = db.relationship("Order", backref=db.backref("address", uselist=False))
     country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
     country = db.relationship(
         "Country", backref=db.backref("order_addresses", lazy=True)

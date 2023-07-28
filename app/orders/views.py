@@ -16,10 +16,8 @@ from app.orders.controller import (
     get_order_by_id,
     order_delete,
 )
-from app.orders.forms import OrderForm, OrderUpdateForm
-from app.products.models import Product
+from app.orders.forms import OrderForm
 from app.orders import orders_blueprint
-from app.products.controller import product_list
 
 
 @orders_blueprint.route("/", methods=["GET"])

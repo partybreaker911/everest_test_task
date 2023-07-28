@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField
+from wtforms import IntegerField, SelectField, SubmitField
 from wtforms.validators import DataRequired
 
 from app.orders.models import Order
@@ -25,5 +25,8 @@ class OrderForm(FlaskForm):
         return True
 
 
-class OrderUpdateForm(FlaskForm):
-    quantity = IntegerField("Quantity", validators=[DataRequired()])
+class AddressForm(FlaskForm):
+    country_id = SelectField("Country", coerce=int, validators=[DataRequired()])
+    city_id = SelectField("City", coerce=int, validators=[DataRequired()])
+    street_id = SelectField("Street", coerce=int, validators=[DataRequired()])
+    submit = SubmitField("Submit Address")
