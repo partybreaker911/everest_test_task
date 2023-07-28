@@ -4,13 +4,12 @@
 {% block content %}
 <h1>Create a New Order</h1>
 <form method="post" action="{{ url_for('orders.order_create') }}">
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" name="quantity" required>
-    <br>
-    <label for="product_id">Product ID:</label>
-    <input type="number" id="product_id" name="product_id" required>
-    <br>
-    <input type="submit" value="Create Order">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+    {{ form.quantity.label }} {{ form.quantity }}
+    {{ form.status.label }} {{ form.status }}
+    {{ form.product_id.label }} {{ form.product_id }}
+    <button type="submit">Submit</button>
 </form>
 {% endblock content %}
     

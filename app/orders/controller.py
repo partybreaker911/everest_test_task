@@ -2,7 +2,7 @@ from typing import List, Any, Optional
 
 from app import db
 from app.orders.models import Order
-from app.products.models import Product
+from app.products.controller import product_view
 
 
 def order_list() -> List[str]:
@@ -46,11 +46,18 @@ def order_create(quantity: int, product_id: int) -> Optional[Order]:
     Raises:
         ValueError: If the product with the given ID does not exist.
     """
-    order = Order(quantity=quantity, product_id=product_id)
-    db.session.add(order)
+    try:
+        # Получите объект продукта по ID
+        product = product_view(product_id)
+    except ValueError:
+        raise ValueError("Product not found")
+
+    # Создайте новый заказ
+    new_order = Order(quantity=quantity, product=product)
+    db.session.add(new_order)
     db.session.commit()
 
-    return order
+    return new_order
 
 
 def order_update(id: int, quantity: float) -> Optional[Order]:

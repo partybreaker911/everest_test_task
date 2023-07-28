@@ -14,11 +14,9 @@ from app.orders.controller import (
     order_view,
     order_delete,
 )
-
-
-orders_blueprint = Blueprint(
-    "orders", __name__, url_prefix="/orders", template_folder="templates"
-)
+from app.orders.forms import OrderForm
+from app.orders import orders_blueprint
+from app.products.controller import product_list
 
 
 @orders_blueprint.route("/", methods=["GET"])
@@ -48,35 +46,23 @@ def order_view(order_id: int) -> str:
     return render_template("orders/show_order.html", order=order)
 
 
-@orders_blueprint.route("/new", methods=["GET", "POST"])
+@orders_blueprint.route("/create", methods=["GET", "POST"])
 def order_create() -> None:
-    """
-    Create a new order.
+    form = OrderForm()
+    form.product_id.choices = [(product.id, product.name) for product in product_list()]
 
-    Returns:
-        redirect: Redirect to the product list page after creating the order.
-    """
-    if request.method == "POST":
-        try:
-            quantity = int(request.form["quantity"])
-            product_id = int(request.form["product_id"])
-        except ValueError:
-            return "Invalid input", 400
+    if form.validate_on_submit():
+        quantity = form.quantity.data
+        product_id = form.product_id.data
 
         try:
-            # Create the order using the controller function
             order = order_create(quantity=quantity, product_id=product_id)
         except ValueError as e:
             return str(e), 404
 
-        # You can perform any additional actions or error handling here if needed
+        return redirect(url_for("products.list_products"))
 
-        return redirect(
-            url_for("products.list_products")
-        )  # Redirect to the product list page
-
-    # Render the HTML template for creating a new order
-    return render_template("orders/create_order.html")
+    return render_template("orders/create_order.html", form=form)
 
 
 @orders_blueprint.route("/<int:order_id>/update", methods=["GET", "POST"])
