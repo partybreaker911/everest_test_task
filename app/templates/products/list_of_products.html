@@ -14,56 +14,66 @@
                         <div class="card-header">
                             <h4>Products</h4>
                         </div>
-                        <div class="card-body">
-                            <form id="search-form" method="GET" action="">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" name="search" placeholder="Search product">
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </div>
-                            </form>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover" id="employee-table">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <a class="sort-link" href="#" data-sort-by="full_name">Product Name</a>
-                                            </th>
-                                            <th>
-                                                <a class="sort-link" href="#" data-sort-by="position">Product Price</a>
-                                            </th>
-                                            <th>
-                                                <a class="sort-link" href="#" data-sort-by="hire_date">Product Color</a>
-                                            </th>
-                                            <th>
-                                                <a class="sort-link" href="#" data-sort-by="email">Product Weigth</a>
-                                            </th>
-                                            <th>
-                                                <a class="sort-link" href="#" data-sort-by="manager">Description</a>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+
+                        <section style="background-color: #eee;">
+                            <div class="container py-5">
+
+                                {% for product in products %}
+                              <div class="row justify-content-center mb-3">
+                                <div class="col-md-12 col-xl-10">
+                                  <div class="card shadow-0 border rounded-3">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                                          <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/img%20(4).webp"
+                                              class="w-100" />
+                                            <a href="#!">
+                                              <div class="hover-overlay">
+                                                <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                                              </div>
+                                            </a>
+                                          </div>
+                                        </div>
                                         
-                                        {% for product in products %}
-                                            <tr>
-                                                <td><a href="">{{ product.name }}</a></td>
-                                                <td>{{ product.price }}</td>
-                                                <td>{{ product.color }}</td>
-                                                <td>{{ product.weight }}</td>
-                                                <td>{{ product.description }}</td>
-                                                <td><a href="" class="btn btn-primary">Edit</a></td>
-                                                <form action="" method="post" style="display: inline;">
-                                                    <input class="btn btn-warning" type="submit" value="Delete">
-                                                </form>
-                                            </tr>
-                                        {% endfor %}
-                                                                        
-                                    </tbody>
-                                </table>
+                                        <div class="col-md-6 col-lg-6 col-xl-6">
+                                          <h5>{{ product.name }}</h5>
+                                          <div class="d-flex flex-row">
+                                            <div class="text-danger mb-1 me-2">
+                                              <i class="fa fa-star"></i>
+                                              <i class="fa fa-star"></i>
+                                              <i class="fa fa-star"></i>
+                                              <i class="fa fa-star"></i>
+                                            </div>
+                                          </div>
+                                          <div class="mb-2 text-muted small">
+                                            <span>{{ product.color }}</span>
+                                            <span class="text-primary"> • </span>
+                                            <span>{{ product.weight }}</span>
+                                          </div>
+                                          <p class="text-truncate mb-4 mb-md-0">
+                                            {{ product.description }}
+                                          </p>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                                          <div class="d-flex flex-row align-items-center mb-1">
+                                            <h4 class="mb-1 me-1">{{ product.price }}</h4>
+                                          </div>
+                                          <h6 class="text-success">Free shipping</h6>
+                                          <div class="d-flex flex-column mt-4">
+                                            <a href="{{ url_for('products.view_product', product_id=product.id) }}" class="btn btn-primary btn-sm">Detail</a>
+                                          </div>
+                                        </div>
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                                {% endfor %}
+                                
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>

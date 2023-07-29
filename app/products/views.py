@@ -7,7 +7,8 @@ from flask import (
 from app.products import products_blueprint
 from app.products.forms import ProductForm
 from app.products.controller import (
-    product_list,
+    get_product_by_id,
+    get_all_products,
     product_create,
 )
 
@@ -20,7 +21,7 @@ def list_of_products() -> str:
     Returns:
         str: The rendered HTML template.
     """
-    products = product_list()
+    products = get_all_products()
 
     return render_template("products/list_of_products.html", products=products)
 
@@ -44,3 +45,19 @@ def create_product() -> str:
         return redirect(url_for("products.list_of_products"))
 
     return render_template("products/create_product.html", form=form)
+
+
+@products_blueprint.route("/<int:product_id>/view", methods=["GET"])
+def view_product(product_id: int) -> str:
+    """
+    Retrieve a product and render the template.
+
+    Args:
+        product_id (int): The ID of the product.
+
+    Returns:
+        str: The rendered HTML template.
+    """
+    product = get_product_by_id(product_id)
+
+    return render_template("products/view_product.html", product=product)

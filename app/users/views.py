@@ -7,29 +7,35 @@ from celery.result import AsyncResult
 from flask import render_template, redirect, url_for, request, flash, session
 
 from . import users_blueprint
-from app import csrf, db
+from app import db
 from app.users.controller import (
     create_user,
     authenticate_user,
     get_user_by_username,
     get_user_by_email,
 )
+from app.users.forms import RegistrationForm
 
 
 @users_blueprint.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        username = request.form["username"]
-        email = request.form["email"]
-        password = request.form["password"]
+    form = RegistrationForm()
 
-        if get_user_by_username(username):
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+
+        if User.query.filter_by(username=username).first():
             flash("Username already exists", "error")
-        elif get_user_by_email(email):
+        elif User.query.filter_by(email=email).first():
             flash("Email already exists", "error")
         else:
-            create_user(username, email, password)
+            new_user = User(username=username, email=email, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+
             flash("Registration successful. Please log in.", "success")
             return redirect(url_for("auth.login"))
 
-    return render_template("register.html")
+    return render_template("register.html", form=form)
