@@ -4,7 +4,7 @@ from app import db
 from app.products.models import Product
 
 
-def product_list() -> List[str]:
+def get_all_products() -> List[str]:
     """
     Retrieves a list of all products from the database.
 
@@ -15,7 +15,7 @@ def product_list() -> List[str]:
     return products
 
 
-def product_view(id: int) -> Any:
+def get_product_by_id(id: int) -> Any:
     """
     Get a product by its ID.
 
@@ -70,7 +70,7 @@ def product_update(
     Returns:
         Any: The updated product object.
     """
-    product = Product.query.get_or_404(id)
+    product = get_product_by_id(id)
     product.name = name
     product.price = price
     product.color = color
@@ -90,7 +90,7 @@ def product_delete(id: int) -> bool:
     Returns:
         True if the product is successfully deleted, False otherwise.
     """
-    product = Product.query.get_or_404(id)
+    product = get_product_by_id(id)
     db.session.delete(product)
     db.session.commit()
     return True
