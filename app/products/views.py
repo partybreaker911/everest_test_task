@@ -28,20 +28,25 @@ def list_of_products() -> str:
 
 @products_blueprint.route("/create", methods=["GET", "POST"])
 def create_product() -> str:
+    """
+    Create a new product.
+
+    This function handles the creation of a new product based on form data submitted by the user. It validates the form data and, if valid, calls the `product_create` controller function to create the product. After creating the product, it redirects the user to the list of products.
+
+    Returns:
+    - str: The URL of the list of products page.
+    """
     form = ProductForm()
 
     if form.validate_on_submit():
-        # Extract form data
         name = form.name.data
         price = form.price.data
         color = form.color.data
         weight = form.weight.data
         description = form.description.data
 
-        # Call the controller function to create the product
         product_create(name, price, color, weight, description)
 
-        # Redirect to the list of products or any other appropriate page
         return redirect(url_for("products.list_of_products"))
 
     return render_template("products/create_product.html", form=form)
