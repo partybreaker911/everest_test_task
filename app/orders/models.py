@@ -25,6 +25,17 @@ class Order(db.Model):
 
     @classmethod
     def create_order(cls, quantity: int, product_id: int, status: str):
+        """
+        Create an order with the given quantity, product ID, and status.
+
+        Args:
+            quantity (int): The quantity of the order.
+            product_id (int): The ID of the product.
+            status (str): The status of the order.
+
+        Returns:
+            Order: The newly created order.
+        """
         new_order = cls(quantity=quantity, product_id=product_id, status=status)
         db.session.add(new_order)
         db.session.commit()
@@ -32,6 +43,12 @@ class Order(db.Model):
 
     @staticmethod
     def get_status_choices():
+        """
+        This static method returns the choices for the status field in the Order model.
+
+        Returns:
+            list: A list of tuples containing the status value as both the key and the value.
+        """
         return [(status.value, status.value) for status in Order.DeliveryStatus]
 
 

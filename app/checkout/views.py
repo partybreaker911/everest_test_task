@@ -7,10 +7,12 @@ from flask import (
 )
 
 from . import checkout_blueprint
+from app.checkout.forms import CheckoutForm
 from app.checkout.controller import checkout_product
+from app.products.controller import get_product_by_id
 
 
-@checkout_blueprint.route("/checkout/<int:product_id>", methods=["POST"])
+@checkout_blueprint.route("/checkout/<int:product_id>", methods=["POST", "GET"])
 def checkout(product_id: int) -> None:
     """
     Checkout the specified product.
@@ -28,14 +30,22 @@ def checkout(product_id: int) -> None:
 
     Note: You can customize the template name for the checkout success page.
     """
-    quantity = int(request.form.get("quantity", 1))  # Get the quantity from the form
+    product = get_product_by_id(product_id)
+    form = CheckoutForm()
+    if form.validate_on_submit():
+        quantity = form.quantity.data
 
-    result = checkout_product(product_id, quantity)
+        result = checkout_product(product_id, quantity)
 
-    if result["success"]:
-        flash(result["message"], "success")
-    else:
-        flash(result["message"], "error")
-        return redirect(url_for("products.view_product", product_id=product_id))
+        if result["success"]:
+            flash(result["message"], "success")
+            return redirect(url_for("checkout.checkout_success"))
+        else:
+            flash(result["message"], "error")
 
-    return render_template("checkout/checkout_success.html", product_id=product_id)
+    return render_template("checkout/checkout.html", product=product, form=form)
+
+
+@checkout_blueprint.route("/checkout/success", methods=["GET"])
+def checkout_success() -> None:
+    return "OK"

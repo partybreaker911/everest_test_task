@@ -57,6 +57,10 @@ def create_app(config_name=None):
 
     app.register_blueprint(addresses_blueprint)
 
+    from app.checkout import checkout_blueprint
+
+    app.register_blueprint(checkout_blueprint)
+
     # shell context for flask cli
     @app.shell_context_processor
     def ctx():
