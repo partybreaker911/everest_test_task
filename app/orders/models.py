@@ -57,14 +57,15 @@ class OrderAddress(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
-    order = db.relationship("Order", backref=db.backref("address", uselist=False))
     country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
+    city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
+    street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
+
+    order = db.relationship("Order", backref=db.backref("address", uselist=False))
     country = db.relationship(
         "Country", backref=db.backref("order_addresses", lazy=True)
     )
-    city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
     city = db.relationship("City", backref=db.backref("order_addresses", lazy=True))
-    street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
     street = db.relationship("Street", backref=db.backref("order_addresses", lazy=True))
 
     def __init__(self, country, region, city, street):

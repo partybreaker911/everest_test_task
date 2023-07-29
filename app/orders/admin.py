@@ -2,7 +2,7 @@ from flask_admin.contrib.sqla import ModelView
 
 from app import db, admin
 
-from app.orders.models import Order
+from app.orders.models import Order, OrderAddress
 
 
 # Create the Order model admin view
@@ -12,5 +12,10 @@ class OrderAdmin(ModelView):
     # ...
 
 
+class OrderAddressAdmin(ModelView):
+    column_list = ["id", "order", "country", "city", "street"]
+
+
 # # Register the Order model view with the admin
 admin.add_view(OrderAdmin(Order, db.session))
+admin.add_view(OrderAddressAdmin(OrderAddress, db.session))

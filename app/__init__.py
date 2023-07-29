@@ -40,6 +40,7 @@ def create_app(config_name=None):
     from app.products.admin import ProductAdmin
     from app.orders.admin import OrderAdmin
     from app.users.admin import UserAdmin
+    from app.addresses.admin import CountryAdmin, CityAdmin, StreetAdmin
 
     admin.init_app(app)
     # register blueprints
