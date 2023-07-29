@@ -39,6 +39,7 @@ def create_app(config_name=None):
     socketio.init_app(app, message_queue=app.config["SOCKETIO_MESSAGE_QUEUE"])
     from app.products.admin import ProductAdmin
     from app.orders.admin import OrderAdmin
+    from app.users.admin import UserAdmin
 
     admin.init_app(app)
     # register blueprints
