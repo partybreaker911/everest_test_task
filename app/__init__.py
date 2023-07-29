@@ -18,7 +18,7 @@ migrate = Migrate()
 ext_celery = FlaskCeleryExt(create_celery_app=make_celery)
 csrf = CSRFProtect()
 socketio = SocketIO()
-admin = Admin(name="My admin", template_mode="bootstrap4")
+admin = Admin(name="Catalog", template_mode="bootstrap4")
 
 
 def create_app(config_name=None):
@@ -37,9 +37,10 @@ def create_app(config_name=None):
     ext_celery.init_app(app)
     csrf.init_app(app)
     socketio.init_app(app, message_queue=app.config["SOCKETIO_MESSAGE_QUEUE"])
-    # from app.products.admin import ProductAdmin
+    from app.products.admin import ProductAdmin
+    from app.orders.admin import OrderAdmin
 
-    # admin.init_app(app)
+    admin.init_app(app)
     # register blueprints
     from app.users import users_blueprint
 
