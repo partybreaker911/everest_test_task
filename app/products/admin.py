@@ -1,10 +1,31 @@
 from flask_admin.contrib.sqla import ModelView
-from app.products.models import Product
-from app import admin, db
 
 
 class ProductAdmin(ModelView):
-    column_list = ["id", "name", "price", "color", "weight", "description"]
+    """ModelView for product admin."""
+
+    can_view_details = True
+    column_display_pk = True
+    column_list = [
+        "id",
+        "categories",
+        "name",
+        "price",
+        "color",
+        "weight",
+        "description",
+    ]
+    please_do_show_prorimary_keys_value = True
 
 
-admin.add_view(ProductAdmin(Product, db.session))
+class CategoryAdmin(ModelView):
+    """ModelView for category admin."""
+
+    can_view_details = True
+    column_display_pk = True
+    column_list = [
+        "id",
+        "name",
+        "parent",
+    ]
+    please_do_show_prorimary_keys_value = True
