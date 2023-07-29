@@ -1,86 +1,59 @@
+import enum
 from datetime import datetime
-from enum import Enum
 
 from app import db
+from app.products.models import Product
 
-# from app.orders.tasks import change_order_status
+
+class OrderStatusEnum(enum.Enum):
+    """Class for choosing order statuses"""
+
+    processed = "processed"
+    unprocessed = "unprocessed"
 
 
 class Order(db.Model):
-    """
-    Order model
-    """
-
-    class DeliveryStatus(Enum):
-        PENDING = "Pending"
-        DELIVERED = "Delivered"
-        CANCELLED = "Cancelled"
-
-    __tablename__ = "orders"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    quantity = db.Column(db.Integer)
-    status = db.Column(db.Enum(DeliveryStatus), default=DeliveryStatus.PENDING)
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"))
-    order_address_id = db.Column(db.Integer, db.ForeignKey("order_addresses.id"))
-    product = db.relationship("Product", backref="orders_relation")
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-    @classmethod
-    def create_order(cls, quantity: int, product_id: int, status: str):
-        """
-        Create an order with the given quantity, product ID, and status.
-
-        Args:
-            quantity (int): The quantity of the order.
-            product_id (int): The ID of the product.
-            status (str): The status of the order.
-
-        Returns:
-            Order: The newly created order.
-        """
-        new_order = cls(quantity=quantity, product_id=product_id, status=status)
-        db.session.add(new_order)
-        db.session.commit()
-        return new_order
-
-    @staticmethod
-    def get_status_choices():
-        """
-        This static method returns the choices for the status field in the Order model.
-
-        Returns:
-            list: A list of tuples containing the status value as both the key and the value.
-        """
-        return [(status.value, status.value) for status in Order.DeliveryStatus]
-
-    # def update_status_and_trigger_task(self, new_status):
-    #     self.status = new_status
-    #     db.session.commit()
-
-    #     # Trigger the Celery task to change the status asynchronously
-    #     change_order_status.delay(self.id, new_status)
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(
+        db.Enum(OrderStatusEnum), default=OrderStatusEnum.unprocessed, nullable=False
+    )
+    delivered_at = db.Column(db.DateTime)
 
 
-class OrderAddress(db.Model):
-    """Model that stores order address information."""
-
-    __tablename__ = "order_addresses"
+class OrderProduct(db.Model):
+    """Model for product order"""
 
     id = db.Column(db.Integer, primary_key=True)
-    # country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
-    # city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
-    # street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
+    order_id = db.Column(
+        db.Integer,
+        db.ForeignKey("order.id"),
+        index=True,
+        nullable=False,
+    )
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id"),
+        index=True,
+        nullable=False,
+    )
+    quantity = db.Column(db.Integer, nullable=False)
+    cost = db.Column(db.DECIMAL(10, 2), default=0.0)
 
-    order = db.relationship("Order", backref=db.backref("address", uselist=False))
-    # country = db.relationship(
-    #     "Country", backref=db.backref("order_addresses", lazy=True)
-    # )
-    # city = db.relationship("City", backref=db.backref("order_addresses", lazy=True))
-    # street = db.relationship("Street", backref=db.backref("order_addresses", lazy=True))
+    order = db.relationship("Order", lazy="joined")
+    product = db.relationship(Product, lazy="joined")
 
-    def __init__(self, country, region, city, street):
-        self.country = country
-        self.region = region
-        self.city = city
-        self.street = street
+    __table_args__ = (
+        db.CheckConstraint(
+            quantity >= 0,
+            name="quantity_positive_or_zero",
+        ),
+        db.CheckConstraint(
+            cost >= 0,
+            name="check_order_product_cost_non_negative",
+        ),
+        {},
+    )
+
+    def __repr__(self):
+        """Represent this OrderProduct as a string."""
+        return f"<OrderProduct order: {self.order_id} product: {self.product_id}>"

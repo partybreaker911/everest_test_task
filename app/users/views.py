@@ -1,20 +1,11 @@
-import random
-import logging
-from string import ascii_lowercase
-
-import requests
 from celery.result import AsyncResult
 from flask import render_template, redirect, url_for, request, flash, session
+from flask_login import login_user
 
-from . import users_blueprint
 from app import db
-from app.users.controller import (
-    create_user,
-    authenticate_user,
-    get_user_by_username,
-    get_user_by_email,
-)
-from app.users.forms import RegistrationForm
+from . import users_blueprint
+from app.users.models import User
+from app.users.forms import RegistrationForm, LoginForm
 
 
 @users_blueprint.route("/register", methods=["GET", "POST"])
@@ -39,3 +30,30 @@ def register():
             return redirect(url_for("users.login"))
 
     return render_template("users/register.html", form=form)
+
+
+@users_blueprint.route("/login", methods=["GET", "POST"])
+def login():
+    """View for user login."""
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+
+        user = User.query.filter_by(email=email).first()
+
+        if user is not None and user.check_password(password):
+            login_user(user)
+            return redirect(url_for("products.list_of_products"))
+        else:
+            flash("Неправильные учетные данные. Пожалуйста, повторите попытку.")
+
+    return render_template("users/login.html", form=form)
+
+
+@users_blueprint.route("/logout")
+def logout():
+    session.clear()
+
+    return redirect(url_for("products.list_of_products"))

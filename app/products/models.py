@@ -1,4 +1,24 @@
-from app import db
+from app import db, admin
+from app.products.admin import ProductAdmin, CategoryAdmin
+
+
+class Category(db.Model):
+    """Model for product category."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(
+        db.String(length=140),
+        index=True,
+        unique=True,
+        nullable=False,
+    )
+    description = db.Column(db.Text)
+
+    parent_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+    parent = db.relationship("Category", remote_side=id, backref="subcategories")
+
+    def __repr__(self):
+        return self.name
 
 
 class Product(db.Model):
@@ -10,7 +30,7 @@ class Product(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.DECIMAL(10, 2), default=0.0)
     color = db.Column(db.String(128), nullable=False)
     weight = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -29,3 +49,16 @@ class Product(db.Model):
             weight=self.weight,
             description=self.description,
         )
+
+
+class ProductCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"))
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+
+    product = db.relationship("Product", lazy="joined")
+    category = db.relationship("Category", lazy="joined")
+
+
+admin.add_view(ProductAdmin(Product, db.session))
+admin.add_view(CategoryAdmin(Category, db.session))
