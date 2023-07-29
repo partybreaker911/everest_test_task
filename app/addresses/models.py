@@ -10,6 +10,9 @@ class Country(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def __repr__(self):
+        return self.name
+
 
 class City(db.Model):
     """Model that stores city information."""
@@ -23,6 +26,9 @@ class City(db.Model):
         self.name = name
         self.country = country
 
+    def __repr__(self):
+        return self.name
+
 
 class Street(db.Model):
     """Model that stores street information."""
@@ -35,3 +41,6 @@ class Street(db.Model):
     def __init__(self, name, city):
         self.name = name
         self.city = city
+
+    def __repr__(self):
+        return self.name

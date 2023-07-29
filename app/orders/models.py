@@ -3,6 +3,8 @@ from enum import Enum
 
 from app import db
 
+# from app.orders.tasks import change_order_status
+
 
 class Order(db.Model):
     """
@@ -20,6 +22,7 @@ class Order(db.Model):
     quantity = db.Column(db.Integer)
     status = db.Column(db.Enum(DeliveryStatus), default=DeliveryStatus.PENDING)
     product_id = db.Column(db.Integer, db.ForeignKey("products.id"))
+    order_address_id = db.Column(db.Integer, db.ForeignKey("order_addresses.id"))
     product = db.relationship("Product", backref="orders_relation")
     created_at = db.Column(db.DateTime, default=datetime.now)
 
@@ -51,21 +54,30 @@ class Order(db.Model):
         """
         return [(status.value, status.value) for status in Order.DeliveryStatus]
 
+    # def update_status_and_trigger_task(self, new_status):
+    #     self.status = new_status
+    #     db.session.commit()
+
+    #     # Trigger the Celery task to change the status asynchronously
+    #     change_order_status.delay(self.id, new_status)
+
 
 class OrderAddress(db.Model):
     """Model that stores order address information."""
 
+    __tablename__ = "order_addresses"
+
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
+    # country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
+    # city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
+    # street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
+
     order = db.relationship("Order", backref=db.backref("address", uselist=False))
-    country_id = db.Column(db.Integer, db.ForeignKey("country.id"), nullable=False)
-    country = db.relationship(
-        "Country", backref=db.backref("order_addresses", lazy=True)
-    )
-    city_id = db.Column(db.Integer, db.ForeignKey("city.id"), nullable=False)
-    city = db.relationship("City", backref=db.backref("order_addresses", lazy=True))
-    street_id = db.Column(db.Integer, db.ForeignKey("street.id"), nullable=False)
-    street = db.relationship("Street", backref=db.backref("order_addresses", lazy=True))
+    # country = db.relationship(
+    #     "Country", backref=db.backref("order_addresses", lazy=True)
+    # )
+    # city = db.relationship("City", backref=db.backref("order_addresses", lazy=True))
+    # street = db.relationship("Street", backref=db.backref("order_addresses", lazy=True))
 
     def __init__(self, country, region, city, street):
         self.country = country
