@@ -1,58 +1,42 @@
-import datetime
-import enum
-
-from flask_login import UserMixin
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask_security import RoleMixin, UserMixin
 
 from app import db, admin
-from app.users.admin import UserAdmin
 
 
-class UserRoleEnum(enum.Enum):
-    """
-    User roles.
-    """
+# class RolesUsers(db.Model):
+#     __tablename__ = "roles_users"
+#     id = db.Column(db.Integer(), primary_key=True)
+#     user_id = db.Column("user_id", db.Integer(), db.ForeignKey("user.id"))
+#     role_id = db.Column("role_id", db.Integer(), db.ForeignKey("role.id"))
 
-    guest = "guest"
-    admin = "admin"
-    manager = "manager"
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = "role"
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
 
 
 class User(db.Model, UserMixin):
-    """User model."""
-
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(128), unique=True, nullable=False)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    is_active = db.Column(db.Boolean(), default=True)
-    password_hash = db.Column(db.String(128), nullable=False)
-    created_date = db.Column(db.DateTime, default=datetime.datetime.now)
-
-    def __init__(self, username, email, password, *args, **kwargs):
-        self.username = username
-        self.email = email
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def get_id(self):
-        """Return the user's id as a string."""
-        return str(self.id)
-
-    def is_admin(self):
-        """Check if the user has the admin role."""
-        return self.role == UserRoleEnum.admin
-
-    def is_manager(self):
-        """Check if the user has the manager role."""
-        return self.role == UserRoleEnum.manager
-
-    def __repr__(self):
-        """Represent this User as a string."""
-        return self.email
+    __tablename__ = "user"
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255), unique=True, nullable=True)
+    password = db.Column(db.String(255), nullable=False)
+    last_login_at = db.Column(db.DateTime())
+    current_login_at = db.Column(db.DateTime())
+    last_login_ip = db.Column(db.String(100))
+    current_login_ip = db.Column(db.String(100))
+    login_count = db.Column(db.Integer)
+    active = db.Column(db.Boolean())
+    premium = db.Column(db.Boolean())
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
+    confirmed_at = db.Column(db.DateTime())
+    roles = db.relationship(
+        "Role", secondary="roles_users", backref=db.backref("users", lazy="dynamic")
+    )
 
 
-admin.add_view(UserAdmin(User, db.session))
+def load_user(user_id):
+    """Callback to reload the user object from the user ID stored in the session."""
+    return User.query.get(int(user_id))

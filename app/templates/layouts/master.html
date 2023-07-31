@@ -107,33 +107,22 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                   <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                      <a class="nav-link active" href="{{ url_for('products.list_of_products') }}"><i class="bi bi-house-gear"></i>
+                      <a class="nav-link active" href="{{ url_for('catalog.list_of_all_categoryes') }}"><i class="bi bi-house-gear"></i>
                         Home
                         <span class="visually-hidden">(current)</span>
                       </a>
                     </li>
                   </ul>
-                  <li class="nav-item dropdown">
+                  <!-- <li class="nav-item dropdown"> -->
                     <a class="nav-link dropdown-toggle" href="#" id="navDropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-bookmark-plus"></i>
                         Account actions
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     
-                    {% if current_user.is_authenticated %}
-                        <!-- Ссылка на страницу logout, если пользователь аутентифицирован -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('users.logout') }}">Logout</a>
-                        </li>
-                    {% else %}
-                        <!-- Ссылка на страницу login, если пользователь не аутентифицирован -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('users.login') }}">Login</a>
-                        </li>
-                    {% endif %}
 
                     </ul>
-                  </li>
+                 <!-- </li>-->
                 </div>
               </div>
         </nav>

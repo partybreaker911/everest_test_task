@@ -1,0 +1,57 @@
+{% extends 'layouts/master.html' %}
+
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>New Order</h3>
+                <p class="text-subtitle text-muted">Create New Order</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('delivery.list_of_all_orders') }}">Product List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Creation new Order</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="text-center">Create Order</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <!-- CSRF Token -->
+                {{ form.hidden_tag() }}
+    
+                <!-- Product Selection -->
+                <div class="mb-3">
+                    {{ form.product.label(class="form-label") }}
+                    {{ form.product(class="form-select", placeholder="Select a Product", required="required") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.quantity.label(class="form-label") }}
+                    {{ form.quantity(class="form-control", placeholder="Enter Quantity", required="required") }}
+                </div>
+                <!-- Delivery Address -->
+                <div class="mb-3">
+                    {{ form.address.label(class="form-label") }}
+                    {{ form.address(class="form-control", placeholder="Enter Delivery Address", required="required") }}
+                </div>
+    
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>  
+{% endblock content %}
+    
