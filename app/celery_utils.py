@@ -11,7 +11,7 @@ def make_celery(app):
     celery.config_from_object(app.config, namespace="CELERY")
 
     # Set Flask application object on the Celery application.
-    if not hasattr(celery, 'flask_app'):
+    if not hasattr(celery, "flask_app"):
         celery.flask_app = app
 
     celery.Task = AppContextTask
@@ -33,7 +33,6 @@ class AppContextTask(Task):
 
 
 class custom_celery_task:
-
     EXCEPTION_BLOCK_LIST = (
         IndexError,
         KeyError,
@@ -63,21 +62,15 @@ class custom_celery_task:
         return task_func
 
     def _get_retry_countdown(self, task_func):
-        retry_backoff = int(
-            self.task_kwargs.get('retry_backoff', True)
-        )
-        retry_backoff_max = int(
-            self.task_kwargs.get('retry_backoff_max', 600)
-        )
-        retry_jitter = self.task_kwargs.get(
-            'retry_jitter', True
-        )
+        retry_backoff = int(self.task_kwargs.get("retry_backoff", True))
+        retry_backoff_max = int(self.task_kwargs.get("retry_backoff_max", 600))
+        retry_jitter = self.task_kwargs.get("retry_jitter", True)
 
         countdown = get_exponential_backoff_interval(
             factor=retry_backoff,
             retries=task_func.request.retries,
             maximum=retry_backoff_max,
-            full_jitter=retry_jitter
+            full_jitter=retry_jitter,
         )
 
         return countdown
